@@ -7,10 +7,11 @@ require("express-async-errors");
 
 // Custom Error Class
 const AppError = require("./utils/AppError");
+const logger = require("./utils/logger");
 
 // Import routes here
 // ---------------------
-
+const gamesRouter=require("./routes/gamesRouter");
 // ---------------------
 
 // Define Express app
@@ -27,7 +28,7 @@ app.use(express.static("./public"));
 
 // Use Routes
 // ---------------------
-
+app.use("/",gamesRouter);
 // ---------------------
 
 // Not Found Routes
@@ -45,9 +46,13 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE_URL).then(() => {
-  console.log("Connected to MongoDB Server");
-  app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+mongoose.connect(process.env.DATABASE_URL)
+  .then(() => {
+    logger.info("Connected to MongoDB Server");
+    app.listen(process.env.PORT, () => {
+      logger.info(`Server is running on port ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    logger.error("Failed to connect to MongoDB", err);
   });
-});
