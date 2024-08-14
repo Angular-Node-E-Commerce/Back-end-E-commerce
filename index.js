@@ -12,6 +12,7 @@ const logger = require("./utils/logger");
 // Import routes here
 // ---------------------
 const gamesRouter=require("./routes/gamesRouter");
+const usersRouter=require("./routes/usersRouter");
 // ---------------------
 
 // Define Express app
@@ -29,6 +30,7 @@ app.use(express.static("./public"));
 // Use Routes
 // ---------------------
 app.use("/",gamesRouter);
+app.use("/",usersRouter);
 // ---------------------
 
 // Not Found Routes
