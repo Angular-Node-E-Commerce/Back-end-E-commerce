@@ -7,6 +7,25 @@ const jwtSign = promisify(jwt.sign);
 
 const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
+const Joi = require("joi");
+
+const userSchema=Joi.object({
+    username:Joi.string(),
+    email:Joi.string().email(),
+    password:Joi.string().alphanum().min(12),
+    profile:{
+        firstName:Joi.string(),
+        lastName:Joi.string(),
+        address:{
+            country:Joi.string(),
+            city:Joi.string(),
+            street:Joi.string().alphanum(),
+
+        }
+
+
+    }
+})
 
 
 
@@ -22,10 +41,17 @@ exports.getAllUsers = async (req, res, next) => {
 
 exports.signup = async (req, res, next) => {
     try {
+
+        await userSchema.validateAsync(req.body);
+
         const { username, email, password, role, profile } = req.body;
         const { firstName, lastName, address } = profile;
         const { country, city, street } = address;
         const hashingpassword = await bcrypt.hash(password, 12);
+
+        const existEmail=await User.findOne({email});
+        if(existEmail) return res.status(409).send("email is already used");
+
         const user = new User({ username, email, password: hashingpassword,
             profile:{firstName,lastName,
                 address:{country,city,street}}
