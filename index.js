@@ -11,8 +11,9 @@ const logger = require("./utils/logger");
 
 // Import routes here
 // ---------------------
-const gamesRouter=require("./routes/gamesRouter");
-const usersRouter=require("./routes/usersRouter");
+const gamesRouter = require("./routes/gamesRouter");
+const usersRouter = require("./routes/usersRouter");
+const ordersRouter = require("./routes/ordersRoutes");
 // ---------------------
 
 // Define Express app
@@ -29,8 +30,9 @@ app.use(express.static("./public"));
 
 // Use Routes
 // ---------------------
-app.use("/",gamesRouter);
-app.use("/",usersRouter);
+app.use("/", gamesRouter);
+app.use("/", usersRouter);
+app.use("/orders", ordersRouter);
 // ---------------------
 
 // Not Found Routes
@@ -48,7 +50,8 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE_URL)
+mongoose
+  .connect(process.env.DATABASE_URL)
   .then(() => {
     logger.info("Connected to MongoDB Server");
     app.listen(process.env.PORT, () => {

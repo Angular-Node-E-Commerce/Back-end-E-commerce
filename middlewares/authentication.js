@@ -1,16 +1,23 @@
-
-const {promisify}=require('util');
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("../models/usersModel");
-
+const AppError = require("./../utils/AppError");
 const jwtVerify = promisify(jwt.verify);
 
-
-module.exports=async(req,res,next)=>{
+module.exports = async (req, res, next) => {
+  try {
     const { authorization: token } = req.headers;
-
-    const {userId} =await jwtVerify(token,"secret");
+    const { userId } = await jwtVerify(token, "secret");
+    if (!userId) {
+      throw new AppError("Not authorized, token is invalid", 401);
+    }
     const user = await User.findById(userId);
-    req.user=user;
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+    req.user = user;
     next();
-}
+  } catch (err) {
+    next(new AppError("Not authorized, token is invalid", 401));
+  }
+};
