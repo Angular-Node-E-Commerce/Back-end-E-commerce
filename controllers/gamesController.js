@@ -1,4 +1,5 @@
 const Game =require("../models/gamesModel");
+const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
 
 
@@ -25,13 +26,15 @@ exports.getGame=async (req, res, next) => {
 
 exports.createGame = async (req, res, next) => {
     try {
-        const { title, description,publisher,releaseDate,platform,price,discount,quantity,imageCover,images,rating,category } = req.body;
+        let { title, description,publisher,releaseDate,platform,price,discount,quantity,imageCover,images,rating,category } = req.body;
+        imageCover= imageCover[0];
         const game = new Game({ title, description,publisher,releaseDate,platform,price,discount,quantity,imageCover,images,rating,category});
+        console.log(images,imageCover);
         await game.save();
         res.send({ msg: "game created", game });
     } catch (err) {
         logger.error(`Error creating post: ${err.message}`);
-        next(err);
+        next(new AppError('Error creating post:',400));
     }
 };
 
