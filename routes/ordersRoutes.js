@@ -8,7 +8,7 @@ const auth = require("./../middlewares/authentication");
 
 const router = Router();
 
-router.get("/", getAllOrders);
+router.get("/", auth, getAllOrders);
 router.get("/my-orders", auth, getAllOrdersForUser);
 router.post("/", auth, createOrder);
 

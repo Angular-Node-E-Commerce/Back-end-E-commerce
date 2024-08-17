@@ -33,7 +33,7 @@ exports.getAllOrdersForUser = async (req, res, next) => {
 exports.createOrder = async (req, res, next) => {
   try {
     // const newOrder = await Order.create({ ...req.body, userId: req.user.id });
-    const newOrder = await Order.create(req.body);
+    const newOrder = await Order.create({ ...req.body, userId: req.user.id });
     res.status(201).json({
       status: "success",
       data: {
