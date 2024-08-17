@@ -16,6 +16,7 @@ const usersRouter = require("./routes/usersRouter");
 const ordersRouter = require("./routes/ordersRoutes");
 const reviewsRouter = require("./routes/reviewsRoutes");
 const categoriesRouter = require("./routes/categoriesRoutes");
+const cartRouter = require("./routes/cartRoutes");
 // ---------------------
 
 // Define Express app
@@ -37,6 +38,7 @@ app.use("/", usersRouter);
 app.use("/orders", ordersRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/categories", categoriesRouter);
+app.use("/cart", cartRouter);
 // ---------------------
 
 // Not Found Routes
@@ -49,8 +51,10 @@ app.all("*", (req, res, next) => {
 
 // Global Error Middleware
 app.use((err, req, res, next) => {
-  console.error(err.message);
-  res.status(err.statusCode).json({ message: err.message });
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+  });
 });
 
 // Connect to MongoDB
