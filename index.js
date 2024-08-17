@@ -15,6 +15,7 @@ const gamesRouter = require("./routes/gamesRouter");
 const usersRouter = require("./routes/usersRouter");
 const ordersRouter = require("./routes/ordersRoutes");
 const reviewsRouter = require("./routes/reviewsRoutes");
+const categoriesRouter = require("./routes/categoriesRoutes");
 // ---------------------
 
 // Define Express app
@@ -35,6 +36,7 @@ app.use("/games", gamesRouter);
 app.use("/", usersRouter);
 app.use("/orders", ordersRouter);
 app.use("/reviews", reviewsRouter);
+app.use("/categories", categoriesRouter);
 // ---------------------
 
 // Not Found Routes
