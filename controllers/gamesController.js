@@ -35,22 +35,21 @@ exports.createGame = async (req, res, next) => {
     }
 };
 
-// exports.updateGame = async (req, res, next) => {
-//     try {
-//         const newPrice = req.body.price;
-//         const oldTitle = req.params.title;
-//         await Post.updateOne({ title: oldTitle }, { title: newTitle });
-//         res.send("Update done");
-//     } catch (err) {
-//         logger.error(`Error updating post: ${err.message}`);
-//         next(err);
-//     }
-// };
+exports.updateGame = async (req, res, next) => {
+    try {
+        const gameId=req.params.id;
+        await Game.findByIdAndUpdate({ _id: gameId }, req.body);
+        res.send("Update done");
+    } catch (err) {
+        logger.error(`Error updating post: ${err.message}`);
+        next(err);
+    }
+};
 
 exports.deleteGame = async (req, res, next) => {
     try {
-        const deletedgame = req.params.title;
-        await Game.deleteOne({ title: deletedgame });
+
+        await Game.deleteOne();
         res.send("Deleted done");
     } catch (err) {
         logger.error(`Error deleting post: ${err.message}`);
