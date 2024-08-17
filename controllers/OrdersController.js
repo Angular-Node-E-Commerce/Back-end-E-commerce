@@ -15,7 +15,7 @@ exports.getAllOrders = async (req, res, next) => {
   }
 };
 
-exports.getAllOrdersForUser = async (req, res, next) => {
+exports.getMyOrders = async (req, res, next) => {
   try {
     const orders = await Order.find({ userId: req.user.id });
     // const orders = await Order.find({ userId: req.params.id });
@@ -42,6 +42,23 @@ exports.createOrder = async (req, res, next) => {
     });
   } catch (err) {
     next(new AppError("Error creating order", 500));
+  }
+};
+
+exports.getUserOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find({ userId: req.params.userId });
+    if (!orders) {
+      return next(new AppError("No orders found for this user", 404));
+    }
+    res.status(200).json({
+      status: "success",
+      data: {
+        orders,
+      },
+    });
+  } catch (err) {
+    next(new AppError("Error retrieving orders for this user", 500));
   }
 };
 

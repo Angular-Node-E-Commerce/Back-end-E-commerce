@@ -4,10 +4,11 @@ const {
   createCategory,
   updateCategory,
 } = require("./../controllers/categoriesController");
+const restrictTo = require("./../middlewares/authorization");
 const router = Router();
 
 router.get("/", getAllCategories);
-router.post("/", createCategory);
-router.patch("/:id", updateCategory);
+router.post("/", restrictTo("admin"), createCategory);
+router.patch("/:id", restrictTo("admin"), updateCategory);
 
 module.exports = router;
