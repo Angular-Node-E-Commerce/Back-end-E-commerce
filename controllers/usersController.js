@@ -1,13 +1,11 @@
 const User =require("../models/usersModel");
 const bcrypt =require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
 const {promisify}=require('util');
 const jwtSign = promisify(jwt.sign);
-
-const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
 const Joi = require("joi");
+
 
 const userSchema=Joi.object({
     username:Joi.string(),
