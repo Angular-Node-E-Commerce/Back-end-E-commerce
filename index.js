@@ -14,6 +14,7 @@ const logger = require("./utils/logger");
 const gamesRouter = require("./routes/gamesRouter");
 const usersRouter = require("./routes/usersRouter");
 const ordersRouter = require("./routes/ordersRoutes");
+const reviewsRouter = require("./routes/reviewsRoutes");
 // ---------------------
 
 // Define Express app
@@ -30,9 +31,10 @@ app.use(express.static("./public"));
 
 // Use Routes
 // ---------------------
-app.use("/", gamesRouter);
+app.use("/games", gamesRouter);
 app.use("/", usersRouter);
 app.use("/orders", ordersRouter);
+app.use("/reviews", reviewsRouter);
 // ---------------------
 
 // Not Found Routes
@@ -46,7 +48,7 @@ app.all("*", (req, res, next) => {
 // Global Error Middleware
 app.use((err, req, res, next) => {
   console.error(err.message);
-  res.status(err.statusCode).send({ message: err.message });
+  res.status(err.statusCode).json({ message: err.message });
 });
 
 // Connect to MongoDB

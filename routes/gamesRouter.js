@@ -1,17 +1,18 @@
-const express=require("express");
-const router=express.Router();
-const {getAllGames,createGame,getGame,deleteGame}= require('../controllers/gamesController.js')
-//const auth = require('./../middlewares/auth.js');
-//const restrictTo = require("../middlewares/authorization.js");
-//const { uploadImages, handleImages } = require("../middlewares/images.js");
+const express = require("express");
+const router = express.Router();
+const {
+  getAllGames,
+  createGame,
+  getGame,
+  deleteGame,
+} = require("../controllers/gamesController.js");
+const reviewsRoutes = require("./reviewsRoutes.js");
 
+router.use("/:gameId/reviews", reviewsRoutes);
 
-router.get("/games",getAllGames);
-router.get("/games/:id",getGame);
-router.post("/games",createGame);
-router.delete("/games/:title",deleteGame);
-// router.post("/",auth,restrictTo('user'),uploadImages('images',5),handleImages('images'),createPost);
-// router.patch("/:title",upDatepost);
-// router.delete("/:title",deletePost);
+router.get("/", getAllGames);
+router.get("/:id", getGame);
+router.post("/", createGame);
+router.delete("/:title", deleteGame);
 
-module.exports=router;
+module.exports = router;
