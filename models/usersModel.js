@@ -1,13 +1,29 @@
+const { types } = require("joi");
 const {model, Schema} =require("mongoose");
 const userSchema=new Schema({
-    username:String,
-    email:String,
-    password:String,
+    username:{
+        type: String,
+        required: true,
+    },
+    email:{
+        type: String,
+        required: true,
+    },
+    password:{
+        type: String,
+        required: true,
+    },
     role:String,
     
     profile:{
-        firstName:String,
-        lastName:String,
+        firstName:{
+            type: String,
+            required: true,
+        },
+        lastName:{
+            type: String,
+            required: true,
+        },
         address:{
             country:String,
             city:String,
