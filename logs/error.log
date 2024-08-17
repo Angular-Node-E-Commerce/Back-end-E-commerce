@@ -1,9 +1,0 @@
-2024-08-14 20:47:06 error: Failed to connect to MongoDB The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
-2024-08-14 20:47:27 error: Failed to connect to MongoDB The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
-2024-08-14 21:22:29 error: Error getting game: Cast to ObjectId failed for value "football" (type string) at path "_id" for model "Game"
-2024-08-14 23:08:51 error: Error during signup: Cannot destructure property 'firstName' of 'profile' as it is undefined.
-2024-08-14 23:11:38 error: Error during login: 400
-2024-08-14 23:14:10 error: Error during login: 400
-2024-08-14 23:17:39 error: Error during login: 400
-2024-08-15 02:12:56 error: Error getting users: Cast to ObjectId failed for value "{ userId: new ObjectId('66bd0fd47c8ef5db106cfaac') }" (type Object) at path "_id" for model "User"
-2024-08-17 12:31:29 error: Error during signup: Cannot destructure property 'firstName' of 'profile' as it is undefined.
