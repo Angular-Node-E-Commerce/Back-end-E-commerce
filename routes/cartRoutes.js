@@ -13,7 +13,7 @@ router.use(auth);
 
 router.post("/:gameId", addItem);
 router.get("/", getCart);
-router.delete(":/gameId", removeItem);
+router.delete("/:gameId", removeItem);
 router.patch("/:gameId", updateQuantity);
 router.delete("/", clearCart);
 

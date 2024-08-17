@@ -1,4 +1,3 @@
-const { types } = require("joi");
 const { model, Schema } = require("mongoose");
 const userSchema = new Schema(
   {
@@ -16,8 +15,8 @@ const userSchema = new Schema(
     },
     cart: [
       {
-        gameId: { type: Schema.Types.ObjectId, ref: "Games" }, // Ensure this reference is correct
-        quantity: { type: Number },
+        gameId: { type: Schema.Types.ObjectId, ref: "Games" },
+        quantity: { type: Number, default: 1 },
       },
     ],
     role: String,

@@ -18,6 +18,6 @@ module.exports = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    next(new AppError("Not authorized, token is invalid", 401));
+    throw new AppError("Not authorized, token is invalid", 401);
   }
 };
