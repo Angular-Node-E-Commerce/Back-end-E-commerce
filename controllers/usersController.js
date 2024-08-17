@@ -100,9 +100,8 @@ exports.getCurrentUser = async (req, res, next) => {
 };
 exports.updateCurrentUser = async (req, res, next) => {
     try {
-        const userId = req.user._id; 
-        const updateData = req.body;
-        const updatedUser = await User.findByIdAndUpdate(userId, updateData);
+        const userId = req.user._id;
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body);
 
         if (!updatedUser) {
             return res.status(404).send({ message: "User not found" });
@@ -118,13 +117,14 @@ exports.updateCurrentUser = async (req, res, next) => {
     }
 };
 
-// exports.deleteUser = async (req, res, next) => {
-//     try {
-//         const deleteduser = req.params.email;
-//         await User.deleteOne({ email: deleteduser });
-//         res.send("Deleted user done");
-//     } catch (err) {
-//         logger.error(`Error deleting user: ${err.message}`);
-//         next(err);
-//     }
-// };
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+
+        await User.deleteOne();
+        res.send("Deleted user done");
+    } catch (err) {
+        logger.error(`Error deleting post: ${err.message}`);
+        next(err);
+    }
+};

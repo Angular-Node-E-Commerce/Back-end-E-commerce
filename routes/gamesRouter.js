@@ -4,17 +4,31 @@ const {
   getAllGames,
   createGame,
   getGame,
+  updateGame,
   deleteGame,
 } = require("../controllers/gamesController.js");
 const reviewsRoutes = require("./reviewsRoutes.js");
+const auth = require("./../middlewares/authentication.js");
 const restrictTo = require("../middlewares/authorization.js");
-const auth = require("../middlewares/authentication.js");
+const { handleImages, uploadImages } = require("../middlewares/images.js");
 
 router.use("/:gameId/reviews", reviewsRoutes);
 
 router.get("/", getAllGames);
 router.get("/:id", getGame);
-router.post("/", auth, restrictTo("admin"), createGame);
+router.post(
+  "/",
+  auth,
+  restrictTo("admin"),
+  uploadImages([
+    { name: "images", count: 5 },
+    { name: "imageCover", count: 1 },
+  ]),
+  handleImages("imageCover"),
+  handleImages("images"),
+  createGame
+);
+router.patch("/:id", updateGame);
 router.delete("/:title", restrictTo("admin"), deleteGame);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const Game = require("../models/gamesModel");
+const Game = require("../models/gamesModel");
+const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
 
 exports.getAllGames = async (req, res, next) => {
@@ -23,31 +25,66 @@ exports.getGame = async (req, res, next) => {
 
 exports.createGame = async (req, res, next) => {
   try {
-    const game = new Game(req.body);
+    let {
+      title,
+      description,
+      publisher,
+      releaseDate,
+      platform,
+      price,
+      discount,
+      quantity,
+      imageCover,
+      images,
+      rating,
+      category,
+    } = req.body;
+    imageCover = imageCover[0];
+    const game = new Game({
+      title,
+      description,
+      publisher,
+      releaseDate,
+      platform,
+      price,
+      discount,
+      quantity,
+      imageCover,
+      images,
+      rating,
+      category,
+    });
+    console.log(images, imageCover);
     await game.save();
     res.send({ msg: "game created", game });
   } catch (err) {
     logger.error(`Error creating post: ${err.message}`);
-    next(err);
+    next(new AppError("Error creating post:", 400));
   }
 };
 
-// exports.updateGame = async (req, res, next) => {
-//     try {
-//         const newPrice = req.body.price;
-//         const oldTitle = req.params.title;
-//         await Post.updateOne({ title: oldTitle }, { title: newTitle });
-//         res.send("Update done");
-//     } catch (err) {
-//         logger.error(`Error updating post: ${err.message}`);
-//         next(err);
-//     }
-// };
+exports.updateGame = async (req, res, next) => {
+  try {
+    const gameId = req.params.id;
+    await Game.findByIdAndUpdate({ _id: gameId }, req.body);
+    res.send("Update done");
+  } catch (err) {
+    logger.error(`Error updating post: ${err.message}`);
+    next(err);
+  }
+};
 
 exports.deleteGame = async (req, res, next) => {
   try {
     const deletedgame = req.params.title;
     await Game.deleteOne({ title: deletedgame });
+    res.send("Deleted done");
+  } catch (err) {
+    logger.error(`Error deleting post: ${err.message}`);
+    next(err);
+  }
+  try {
+    await Game.deleteOne();
     res.send("Deleted done");
   } catch (err) {
     logger.error(`Error deleting post: ${err.message}`);
