@@ -29,6 +29,6 @@ router.post(
   createGame
 );
 router.patch("/:id", updateGame);
-router.delete("/:title", restrictTo("admin"), deleteGame);
+router.delete("/:id", restrictTo("admin"), deleteGame);
 
 module.exports = router;
