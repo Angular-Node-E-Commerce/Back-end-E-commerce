@@ -1,4 +1,6 @@
 const { model, Schema } = require("mongoose");
+const crypto = require("crypto");
+
 const userSchema = new Schema(
   {
     username: {
@@ -12,6 +14,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     cart: [
       {
@@ -35,11 +38,26 @@ const userSchema = new Schema(
         street: String,
       },
     },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
+
   {
     timestamps: true,
   }
 );
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  return resetToken;
+};
 
 const user = model("User", userSchema);
 

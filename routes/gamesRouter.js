@@ -28,7 +28,18 @@ router.post(
   handleImages("images"),
   createGame
 );
-router.patch("/:id", updateGame);
+router.patch(
+  "/:id",
+  auth,
+  restrictTo("admin"),
+  uploadImages([
+    { name: "images", count: 5 },
+    { name: "imageCover", count: 1 },
+  ]),
+  handleImages("imageCover"),
+  handleImages("images"),
+  updateGame
+);
 router.delete("/:id", restrictTo("admin"), deleteGame);
 
 module.exports = router;

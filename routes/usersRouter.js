@@ -1,17 +1,28 @@
-const express=require("express");
-const router=express.Router();
-const {getAllUsers,signup,login,getCurrentUser,updateCurrentUser,deleteUser}= require('../controllers/usersController');
-const autho= require("../middlewares/authentication");
+const express = require("express");
+const router = express.Router();
+const {
+  getAllUsers,
+  signup,
+  login,
+  getCurrentUser,
+  updateCurrentUser,
+  deleteUser,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
+} = require("../controllers/usersController");
+const auth = require("../middlewares/authentication");
 const restrictTo = require("../middlewares/authorization");
 
+router.post("/forgot-password", forgotPassword);
+router.patch("/reset-password/:token", resetPassword);
 
+router.get("/", auth, restrictTo("admin"), getAllUsers);
+router.get("/me", auth, getCurrentUser);
+router.post("/signup", signup);
+router.post("/login", login);
+router.patch("/me", auth, updateCurrentUser);
+router.delete("/:id", auth, restrictTo("role"), deleteUser);
+router.patch("/update-password", auth, updatePassword);
 
-router.get("/users",restrictTo('admin'),getAllUsers);
-router.get("/users/me",autho,getCurrentUser);
-router.post("/signup",signup);
-router.post("/login",login);
-router.patch("/users/me",autho,updateCurrentUser);
-router.delete("/users/:id",deleteUser)
-
-
-module.exports=router;
+module.exports = router;

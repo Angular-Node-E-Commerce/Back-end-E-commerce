@@ -34,7 +34,7 @@ app.use(express.static("./public"));
 // Use Routes
 // ---------------------
 app.use("/games", gamesRouter);
-app.use("/", usersRouter);
+app.use("/users", usersRouter);
 app.use("/orders", ordersRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/categories", categoriesRouter);

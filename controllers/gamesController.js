@@ -27,37 +27,9 @@ exports.getGame = async (req, res, next) => {
 
 exports.createGame = async (req, res, next) => {
   try {
-    let {
-      title,
-      description,
-      publisher,
-      releaseDate,
-      platform,
-      price,
-      discount,
-      quantity,
-      imageCover,
-      images,
-      rating,
-      category,
-    } = req.body;
+    let { imageCover } = req.body;
     imageCover = imageCover[0];
-    const game = new Game({
-      title,
-      description,
-      publisher,
-      releaseDate,
-      platform,
-      price,
-      discount,
-      quantity,
-      imageCover,
-      images,
-      rating,
-      category,
-    });
-    console.log(images, imageCover);
-    await game.save();
+    const game = await Game.create({ ...req.body, imageCover });
     res.status(201).send({
       status: "success",
       message: "game created successfully",
@@ -74,7 +46,12 @@ exports.createGame = async (req, res, next) => {
 exports.updateGame = async (req, res, next) => {
   try {
     const gameId = req.params.id;
-    await Game.findByIdAndUpdate({ _id: gameId }, req.body);
+    let { imageCover } = req.body;
+    imageCover = imageCover[0];
+    const game = await Game.findByIdAndUpdate(
+      { _id: gameId },
+      { ...req.body, imageCover }
+    );
     res.send({
       status: "success",
       message: "game updated successfully",
