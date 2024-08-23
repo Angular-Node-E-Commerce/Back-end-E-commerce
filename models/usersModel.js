@@ -16,6 +16,7 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    image: String,
     passwordConfirm:{
       type: String,
       select: false,

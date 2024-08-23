@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 require("express-async-errors");
+const path = require("path");
 
 // Custom Error Class
 const AppError = require("./utils/AppError");
@@ -33,16 +34,18 @@ app.use(express.static("./public"));
 
 // Use Routes
 // ---------------------
-app.use("/games", gamesRouter);
-app.use("/users", usersRouter);
-app.use("/orders", ordersRouter);
-app.use("/reviews", reviewsRouter);
-app.use("/categories", categoriesRouter);
-app.use("/cart", cartRouter);
+app.use("/api/v1/games", gamesRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/orders", ordersRouter);
+app.use("/api/v1/reviews", reviewsRouter);
+app.use("/api/v1/categories", categoriesRouter);
+app.use("/api/v1/cart", cartRouter);
+app.use("/static", express.static(path.join(__dirname, "public")));
+
 // ---------------------
 
 // Not Found Routes
-app.all("*", (req, res, next) => {
+app.all("/*", (req, res, next) => {
   throw new AppError(
     `Error : Can't find ${req.originalUrl} on this server!`,
     404

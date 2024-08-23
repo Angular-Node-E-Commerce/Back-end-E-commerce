@@ -8,7 +8,8 @@ const restrictTo = require("./../middlewares/authorization");
 const router = Router();
 
 router.get("/", getAllCategories);
-router.post("/", restrictTo("admin"), createCategory);
+router.post("/", uploadImages([{ name: "catImage", count: 1 }]),
+handleImages("catImage"),restrictTo("admin"), createCategory);
 router.patch("/:id", restrictTo("admin"), updateCategory);
 
 module.exports = router;

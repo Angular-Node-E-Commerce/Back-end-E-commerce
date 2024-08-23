@@ -148,8 +148,13 @@ exports.getCurrentUser = async (req, res, next) => {
 exports.updateCurrentUser = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const updatedUser = await User.findByIdAndUpdate(userId, req.body);
-
+    let { image } = req.body;
+    image = image[0];
+    console.log(image);
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      ...req.body,
+      image,
+    });
     if (!updatedUser) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -184,32 +189,24 @@ exports.deleteUser = async (req, res, next) => {
 // -------------------forget password-------------------------------
 
 exports.forgotPassword = async (req, res, next) => {
-  try {
-    // 1) Get user based on POSTed email
-  
-  
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return next(
-        new AppError("there is no user with this email address", 404)
-      );
-    }
-    // 2) Generate the random reset token
-    const resetToken = user.createPasswordResetToken();
-    await user.save({ validateBeforeSave: false });
-    // 3) Send it to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/users/reset-password/${resetToken}`;
-    await new Email(user, resetURL).sendPasswordreset();
-
-    res.status(200).send({
-      status: "success",
-      message: "Token sent to email!",
-    });
-  } catch (err) {
-    new AppError("There was an error sending the email. Try again later!", 500);
+  // 1) Get user based on POSTed email
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("there is no user with this email address", 404));
   }
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+  // 3) Send it to user's email
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/users/reset-password/${resetToken}`;
+  await new Email(user, resetURL).sendPasswordreset();
+
+  res.status(200).send({
+    status: "success",
+    message: "Token sent to email!",
+  });
 };
 
 //----------------------reset password--------------------------
