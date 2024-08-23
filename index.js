@@ -33,12 +33,12 @@ app.use(express.static("./public"));
 
 // Use Routes
 // ---------------------
-app.use("/games", gamesRouter);
-app.use("/users", usersRouter);
-app.use("/orders", ordersRouter);
-app.use("/reviews", reviewsRouter);
-app.use("/categories", categoriesRouter);
-app.use("/cart", cartRouter);
+app.use("/api/v1/games", gamesRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/orders", ordersRouter);
+app.use("/api/v1/reviews", reviewsRouter);
+app.use("/api/v1/categories", categoriesRouter);
+app.use("/api/v1/cart", cartRouter);
 // ---------------------
 
 // Not Found Routes

@@ -16,6 +16,7 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    image: String,
     cart: [
       {
         gameId: { type: Schema.Types.ObjectId, ref: "Games" },
