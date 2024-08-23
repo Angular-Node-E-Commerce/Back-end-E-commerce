@@ -14,9 +14,6 @@ const userSchema = Joi.object({
   username: Joi.string(),
   email: Joi.string().email(),
   password: Joi.string().alphanum().min(12),
-  passwordConfirm: Joi.string().valid(Joi.ref('password')).required().messages({  ///////////////
-    'any.only': 'Passwords do not match',
-  }),
   profile: {
     firstName: Joi.string(),
     lastName: Joi.string(),
@@ -26,6 +23,24 @@ const userSchema = Joi.object({
       street: Joi.string().alphanum(),
     },
   },
+});
+
+const resetPasswordSchema = Joi.object({
+  password: Joi.string().alphanum().min(12).required(),
+  passwordConfirm: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .messages({
+      'any.only': 'Passwords do not match',
+    }),
+});
+
+const updatePasswordSchema = Joi.object({
+  oldPassword: Joi.string().required(),
+  password: Joi.string().alphanum().min(12).required(),
+  passwordConfirm: Joi.string().valid(Joi.ref('password')).required().messages({
+    'any.only': 'Passwords do not match',
+  }),
 });
 
 
@@ -171,7 +186,7 @@ exports.deleteUser = async (req, res, next) => {
 exports.forgotPassword = async (req, res, next) => {
   try {
     // 1) Get user based on POSTed email
-    // await userSchema.validateAsync(req.body);///////////////
+  
   
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
@@ -201,8 +216,8 @@ exports.forgotPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
-    await userSchema.validateAsync(req.body); ///////////
-    const { password } = req.body.password;
+    await resetPasswordSchema.validateAsync(req.body); ///////////
+    const  password  = req.body.password;
     // 1) Check if passwords match
     if (password !== req.body.passwordConfirm) {
       return next(new AppError("Passwords do not match", 400));
@@ -244,7 +259,7 @@ exports.resetPassword = async (req, res, next) => {
 // ----------------update password ------------------------------
 exports.updatePassword = async (req, res, next) => {
   try {
-    await userSchema.validateAsync(req.body); /////////////////
+    await updatePasswordSchema.validateAsync(req.body); /////////////////
     
     const { password, passwordConfirm, oldPassword } = req.body;
 
