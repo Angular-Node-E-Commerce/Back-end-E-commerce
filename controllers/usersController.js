@@ -9,11 +9,14 @@ const AppError = require("../utils/AppError");
 const crypto = require("crypto");
 
 const jwtSign = promisify(jwt.sign);
-
+// validation
 const userSchema = Joi.object({
   username: Joi.string(),
   email: Joi.string().email(),
   password: Joi.string().alphanum().min(12),
+  passwordConfirm: Joi.string().valid(Joi.ref('password')).required().messages({  ///////////////
+    'any.only': 'Passwords do not match',
+  }),
   profile: {
     firstName: Joi.string(),
     lastName: Joi.string(),
@@ -25,6 +28,8 @@ const userSchema = Joi.object({
   },
 });
 
+
+// --------------------------get all users-----------------------------
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
@@ -41,6 +46,8 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+
+// ---------------------regester---------------------------
 exports.signup = async (req, res, next) => {
   try {
     await userSchema.validateAsync(req.body);
@@ -74,9 +81,13 @@ exports.signup = async (req, res, next) => {
   }
 };
 
+
+//-------------------------------- login -------------------------
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    await userSchema.validateAsync(req.body);
+    const { password, email } = req.body;
+    //const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
     if (!user)
       return res
@@ -96,11 +107,13 @@ exports.login = async (req, res, next) => {
     }
   } catch (err) {
     logger.error(`Error during login: ${err.message}`);
-    next(err);
+    next(new AppError('Failed to log in, please try again later.', 500));
   }
 };
 
 // error i dont know it //////////////////////////////////////
+
+//--------------------view profile --------------------------
 exports.getCurrentUser = async (req, res, next) => {
   try {
     const currentUser = req.user;
@@ -112,9 +125,11 @@ exports.getCurrentUser = async (req, res, next) => {
     res.status(200).send({ status: "success", data: { currentUser } });
   } catch (err) {
     logger.error(`Error getting current user: ${err.message}`);
-    next(err);
+    next(new AppError('Failed to retrieve the current user, please try again later.', 500));
   }
 };
+
+// ----------------------update profile-------------------------
 exports.updateCurrentUser = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -132,10 +147,12 @@ exports.updateCurrentUser = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(`Error updating user: ${err.message}`);
-    next(err);
+    next(new AppError('Failed to update profile, please try again later.', 500));
   }
 };
 
+
+//--------------------delete user --------------------------------
 exports.deleteUser = async (req, res, next) => {
   try {
     await User.deleteOne();
@@ -145,13 +162,17 @@ exports.deleteUser = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(`Error deleting post: ${err.message}`);
-    next(err);
+    next(new AppError('Failed to delete the user, please try again later.', 500));
   }
 };
+
+// -------------------forget password-------------------------------
 
 exports.forgotPassword = async (req, res, next) => {
   try {
     // 1) Get user based on POSTed email
+    // await userSchema.validateAsync(req.body);///////////////
+  
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return next(
@@ -176,10 +197,14 @@ exports.forgotPassword = async (req, res, next) => {
   }
 };
 
+//----------------------reset password--------------------------
+
 exports.resetPassword = async (req, res, next) => {
   try {
+    await userSchema.validateAsync(req.body); ///////////
+    const { password } = req.body.password;
     // 1) Check if passwords match
-    if (req.body.password !== req.body.passwordConfirm) {
+    if (password !== req.body.passwordConfirm) {
       return next(new AppError("Passwords do not match", 400));
     }
     // 2) Get user based on the token
@@ -215,8 +240,12 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
+
+// ----------------update password ------------------------------
 exports.updatePassword = async (req, res, next) => {
   try {
+    await userSchema.validateAsync(req.body); /////////////////
+    
     const { password, passwordConfirm, oldPassword } = req.body;
 
     if (password !== passwordConfirm) {

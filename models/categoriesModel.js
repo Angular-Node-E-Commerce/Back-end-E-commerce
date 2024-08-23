@@ -4,6 +4,7 @@ const categoriesSchema = new Schema(
   {
     name: String,
     description: String,
+    catImage: String,
   },
   {
     timestamps: true,

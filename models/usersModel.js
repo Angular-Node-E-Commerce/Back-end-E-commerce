@@ -16,6 +16,10 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    passwordConfirm:{
+      type: String,
+      select: false,
+    },
     cart: [
       {
         gameId: { type: Schema.Types.ObjectId, ref: "Games" },
