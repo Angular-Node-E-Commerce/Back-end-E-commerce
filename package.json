@@ -15,6 +15,7 @@
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "html-to-text": "^9.0.5",
+    "imagekit": "^5.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.2",
@@ -29,6 +30,6 @@
     "nodemon": "^3.1.4"
   },
   "engines": {
-    "node": "20"
+    "node": ">=16"
   }
 }
