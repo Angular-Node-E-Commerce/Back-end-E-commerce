@@ -27,22 +27,18 @@ const userSchema = Joi.object({
 
 const resetPasswordSchema = Joi.object({
   password: Joi.string().alphanum().min(12).required(),
-  passwordConfirm: Joi.string()
-    .valid(Joi.ref('password'))
-    .required()
-    .messages({
-      'any.only': 'Passwords do not match',
-    }),
+  passwordConfirm: Joi.string().valid(Joi.ref("password")).required().messages({
+    "any.only": "Passwords do not match",
+  }),
 });
 
 const updatePasswordSchema = Joi.object({
   oldPassword: Joi.string().required(),
   password: Joi.string().alphanum().min(12).required(),
-  passwordConfirm: Joi.string().valid(Joi.ref('password')).required().messages({
-    'any.only': 'Passwords do not match',
+  passwordConfirm: Joi.string().valid(Joi.ref("password")).required().messages({
+    "any.only": "Passwords do not match",
   }),
 });
-
 
 // --------------------------get all users-----------------------------
 exports.getAllUsers = async (req, res, next) => {
@@ -60,7 +56,6 @@ exports.getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
-
 
 // ---------------------regester---------------------------
 exports.signup = async (req, res, next) => {
@@ -96,7 +91,6 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-
 //-------------------------------- login -------------------------
 exports.login = async (req, res, next) => {
   try {
@@ -122,7 +116,7 @@ exports.login = async (req, res, next) => {
     }
   } catch (err) {
     logger.error(`Error during login: ${err.message}`);
-    next(new AppError('Failed to log in, please try again later.', 500));
+    next(new AppError("Failed to log in, please try again later.", 500));
   }
 };
 
@@ -140,7 +134,12 @@ exports.getCurrentUser = async (req, res, next) => {
     res.status(200).send({ status: "success", data: { currentUser } });
   } catch (err) {
     logger.error(`Error getting current user: ${err.message}`);
-    next(new AppError('Failed to retrieve the current user, please try again later.', 500));
+    next(
+      new AppError(
+        "Failed to retrieve the current user, please try again later.",
+        500
+      )
+    );
   }
 };
 
@@ -148,13 +147,16 @@ exports.getCurrentUser = async (req, res, next) => {
 exports.updateCurrentUser = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    let { image } = req.body;
-    image = image[0];
-    console.log(image);
-    const updatedUser = await User.findByIdAndUpdate(userId, {
-      ...req.body,
-      image,
-    });
+    let image;
+    if (req.body.image) image = req.body.image[0];
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...req.body,
+        image,
+      },
+      { new: true, runValidators: true }
+    );
     if (!updatedUser) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -167,10 +169,11 @@ exports.updateCurrentUser = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(`Error updating user: ${err.message}`);
-    next(new AppError('Failed to update profile, please try again later.', 500));
+    next(
+      new AppError("Failed to update profile, please try again later.", 500)
+    );
   }
 };
-
 
 //--------------------delete user --------------------------------
 exports.deleteUser = async (req, res, next) => {
@@ -182,7 +185,9 @@ exports.deleteUser = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(`Error deleting post: ${err.message}`);
-    next(new AppError('Failed to delete the user, please try again later.', 500));
+    next(
+      new AppError("Failed to delete the user, please try again later.", 500)
+    );
   }
 };
 
@@ -214,7 +219,7 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   try {
     await resetPasswordSchema.validateAsync(req.body); ///////////
-    const  password  = req.body.password;
+    const password = req.body.password;
     // 1) Check if passwords match
     if (password !== req.body.passwordConfirm) {
       return next(new AppError("Passwords do not match", 400));
@@ -252,12 +257,11 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
-
 // ----------------update password ------------------------------
 exports.updatePassword = async (req, res, next) => {
   try {
     await updatePasswordSchema.validateAsync(req.body); /////////////////
-    
+
     const { password, passwordConfirm, oldPassword } = req.body;
 
     if (password !== passwordConfirm) {

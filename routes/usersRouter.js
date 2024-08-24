@@ -34,7 +34,7 @@ router.patch(
   handleImages("image"),
   updateCurrentUser
 );
-router.delete("/:id", auth, restrictTo("role"), deleteUser);
+router.delete("/:id", auth, restrictTo("admin"), deleteUser);
 router.patch("/update-password", auth, updatePassword);
 
 module.exports = router;
