@@ -27,8 +27,8 @@ exports.getGame = async (req, res, next) => {
 
 exports.createGame = async (req, res, next) => {
   try {
-    let { imageCover } = req.body;
-    imageCover = imageCover[0];
+    let imageCover;
+    if (req.body.imageCover) imageCover = req.body.imageCover[0];
     const game = await Game.create({ ...req.body, imageCover });
     res.status(201).send({
       status: "success",
@@ -46,11 +46,12 @@ exports.createGame = async (req, res, next) => {
 exports.updateGame = async (req, res, next) => {
   try {
     const gameId = req.params.id;
-    let { imageCover } = req.body;
-    imageCover = imageCover[0];
+    let imageCover;
+    if (req.body.imageCover) imageCover = req.body.imageCover[0];
     const game = await Game.findByIdAndUpdate(
       { _id: gameId },
-      { ...req.body, imageCover }
+      { ...req.body, imageCover },
+      { new: true, runValidators: true }
     );
     res.send({
       status: "success",
