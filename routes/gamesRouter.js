@@ -40,6 +40,6 @@ router.patch(
   handleImages("images"),
   updateGame
 );
-router.delete("/:id", restrictTo("admin"), deleteGame);
+router.delete("/:id", auth, restrictTo("admin"), deleteGame);
 
 module.exports = router;
