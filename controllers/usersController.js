@@ -105,10 +105,10 @@ exports.login = async (req, res, next) => {
 
     const matched = await bcrypt.compare(password, user.password);
     if (matched) {
-      const token = await jwtSign({ userId: user._id }, "secret", {
+      const token = await jwtSign({ userId: user._id ,role: user.role }, "secret", {
         expiresIn: "5d",
       });
-      res.send({ message: "User logged in", token });
+      res.send({ message: "User logged in", token ,role: user.role  });
     } else {
       res
         .status(404)
