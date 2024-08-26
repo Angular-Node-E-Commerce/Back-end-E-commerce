@@ -12,8 +12,8 @@ const router = Router();
 router.get("/", getAllCategories);
 router.post(
   "/",
-  uploadImages([{ name: "catImage", count: 1 }]),
-  handleImages("catImage"),
+  uploadImages([{ name: "image", count: 1 }]),
+  handleImages("image"),
   auth,
   restrictTo("admin"),
   createCategory

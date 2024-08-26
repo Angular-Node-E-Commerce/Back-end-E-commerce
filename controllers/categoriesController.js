@@ -18,7 +18,9 @@ exports.getAllCategories = async (req, res, next) => {
 
 exports.createCategory = async (req, res, next) => {
   try {
-    const newCategory = await Category.create(req.body);
+    let image;
+    if (req.body.image) image = req.body.image[0];
+    const newCategory = await Category.create({ ...req.body, image });
     res.status(201).send({
       status: "success",
       data: {

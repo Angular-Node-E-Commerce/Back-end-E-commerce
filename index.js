@@ -41,6 +41,9 @@ app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/static", express.static(path.join(__dirname, "public")));
+app.use("/", (req, res) => {
+  res.send({ message: "Welcome To the Server" });
+});
 
 // ---------------------
 
