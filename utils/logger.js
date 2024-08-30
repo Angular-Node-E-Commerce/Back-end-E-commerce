@@ -1,6 +1,9 @@
 const { createLogger, format, transports } = require("winston");
 const { combine, timestamp, printf, colorize } = format;
 
+const path = require("path");
+const filpath = path.join(__dirname, "./../logs/");
+
 const logFormat = printf(({ level, message, timestamp }) => {
   return `${timestamp} ${level}: ${message}`;
 });
@@ -17,8 +20,8 @@ const logger = createLogger({
     new transports.Console({
       format: combine(colorize(), logFormat),
     }),
-    new transports.File({ filename: "logs/error.log", level: "error" }),
-    new transports.File({ filename: "logs/combined.log" }),
+    new transports.File({ filename: `${filpath}error.log`, level: "error" }),
+    new transports.File({ filename: `${filpath}combined.log` }),
   ],
 });
 
