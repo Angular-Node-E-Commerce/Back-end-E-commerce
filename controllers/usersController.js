@@ -97,7 +97,9 @@ exports.login = async (req, res, next) => {
     await userSchema.validateAsync(req.body);
     const { password, email } = req.body;
     //const { email, password } = req.body;
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select(
+      "+password -profile -passwordResetExpires -passwordResetToken"
+    );
     if (!user)
       return res
         .status(404)
@@ -105,10 +107,14 @@ exports.login = async (req, res, next) => {
 
     const matched = await bcrypt.compare(password, user.password);
     if (matched) {
-      const token = await jwtSign({ userId: user._id ,role: user.role }, "secret", {
-        expiresIn: "5d",
-      });
-      res.send({ message: "User logged in", token ,role: user.role  });
+      const token = await jwtSign(
+        { userId: user._id, role: user.role },
+        "secret",
+        {
+          expiresIn: "5d",
+        }
+      );
+      res.send({ message: "User logged in", token, role: user.role, user });
     } else {
       res
         .status(404)

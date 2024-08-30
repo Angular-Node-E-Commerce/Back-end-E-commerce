@@ -1,6 +1,7 @@
 const Game = require("../models/gamesModel");
 const AppError = require("../utils/AppError");
 const logger = require("../utils/logger");
+const APIFeatures = require("./../utils/APIFeatures");
 
 exports.getAllGames = async (req, res, next) => {
   try {

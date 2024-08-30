@@ -3,6 +3,7 @@ const {
   getAllCategories,
   createCategory,
   updateCategory,
+  deleteCategory,
 } = require("./../controllers/categoriesController");
 const restrictTo = require("./../middlewares/authorization");
 const { uploadImages, handleImages } = require("../middlewares/images");
@@ -19,5 +20,7 @@ router.post(
   createCategory
 );
 router.patch("/:id", auth, restrictTo("admin"), updateCategory);
+
+router.delete("/:id", auth, restrictTo("admin"), deleteCategory);
 
 module.exports = router;

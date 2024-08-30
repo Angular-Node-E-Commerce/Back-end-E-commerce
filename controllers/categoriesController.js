@@ -49,3 +49,13 @@ exports.updateCategory = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteCategory = async (req, res, next) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) return next(new AppError("Category not found", 404));
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};

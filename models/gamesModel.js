@@ -1,8 +1,16 @@
 const { model, Schema } = require("mongoose");
 const gamesSchema = new Schema(
   {
-    title: String,
-    description: String,
+    title: {
+      type: String,
+      required: true,
+      index: true, // This will create a default index
+    },
+    description: {
+      type: String,
+      required: true,
+      index: true, // This will create a default index
+    },
     publisher: String,
     releaseDate: Date,
     platform: String,
@@ -24,6 +32,7 @@ const gamesSchema = new Schema(
     timestamps: true,
   }
 );
+gamesSchema.index({ title: "text", description: "text" });
 
 const Game = model("Games", gamesSchema);
 
