@@ -19,7 +19,14 @@ router.post(
   restrictTo("admin"),
   createCategory
 );
-router.patch("/:id", auth, restrictTo("admin"), updateCategory);
+router.patch(
+  "/:id",
+  uploadImages([{ name: "image", count: 1 }]),
+  handleImages("image"),
+  auth,
+  restrictTo("admin"),
+  updateCategory
+);
 
 router.delete("/:id", auth, restrictTo("admin"), deleteCategory);
 
