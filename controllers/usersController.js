@@ -12,15 +12,16 @@ const jwtSign = promisify(jwt.sign);
 // validation
 const userSchema = Joi.object({
   username: Joi.string(),
+  image: Joi.optional(),
   email: Joi.string().email(),
   password: Joi.string().alphanum().min(12),
   profile: {
-    firstName: Joi.string(),
-    lastName: Joi.string(),
+    firstName: Joi.string().optional(),
+    lastName: Joi.string().optional(),
     address: {
-      country: Joi.string(),
-      city: Joi.string(),
-      street: Joi.string().alphanum(),
+      country: Joi.string().optional(),
+      city: Joi.string().optional(),
+      street: Joi.string().alphanum().optional(),
     },
   },
 });
@@ -60,6 +61,8 @@ exports.getAllUsers = async (req, res, next) => {
 // ---------------------regester---------------------------
 exports.signup = async (req, res, next) => {
   try {
+    let image;
+    if (req.body.image) image = req.body.image[0];
     await userSchema.validateAsync(req.body);
     const { password, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -74,6 +77,7 @@ exports.signup = async (req, res, next) => {
       ...req.body,
       password: hashedPassword,
       role: "user",
+      image,
     });
     const url = `${req.protocol}://${req.get("host")}/me`;
     await new Email(newUser, url).sendWelcome();

@@ -17,7 +17,7 @@ const userSchema = new Schema(
       select: false,
     },
     image: String,
-    passwordConfirm:{
+    passwordConfirm: {
       type: String,
       select: false,
     },
@@ -31,11 +31,9 @@ const userSchema = new Schema(
     profile: {
       firstName: {
         type: String,
-        required: true,
       },
       lastName: {
         type: String,
-        required: true,
       },
       address: {
         country: String,
