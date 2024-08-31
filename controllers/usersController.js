@@ -15,15 +15,11 @@ const userSchema = Joi.object({
   image: Joi.optional(),
   email: Joi.string().email(),
   password: Joi.string().alphanum().min(12),
-  profile: {
-    firstName: Joi.string().optional(),
-    lastName: Joi.string().optional(),
-    address: {
-      country: Joi.string().optional(),
-      city: Joi.string().optional(),
-      street: Joi.string().alphanum().optional(),
-    },
-  },
+  firstName: Joi.string().optional(),
+  lastName: Joi.string().optional(),
+  country: Joi.string().optional(),
+  city: Joi.string().optional(),
+  street: Joi.string().alphanum().optional(),
 });
 
 const resetPasswordSchema = Joi.object({
@@ -74,10 +70,20 @@ exports.signup = async (req, res, next) => {
         .send({ status: "fail", message: "email is already used" });
 
     const newUser = await User.create({
-      ...req.body,
+      username: req.body.username,
+      email: req.body.email,
       password: hashedPassword,
       role: "user",
       image,
+      profile: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        address: {
+          city: req.body.city,
+          country: req.body.country,
+          street: req.body.steert,
+        },
+      },
     });
     const url = `${req.protocol}://${req.get("host")}/me`;
     await new Email(newUser, url).sendWelcome();
