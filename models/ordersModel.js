@@ -10,13 +10,7 @@ const OrderSchema = new Schema(
       },
     ],
     totalAmount: Number,
-    //orderStatus: String, // e.g., 'Pending', 'Completed', 'Cancelled'
-    paymentMethod: { String, enum: ["COD", "Visa"] }, // COD , Visa
-    shippingAddress: {
-      street: String,
-      city: String,
-      country: String,
-    },
+    orderStatus: { type: String, enum: ["Pending", "Completed", "Cancelled"] }, // e.g., 'Pending', 'Completed', 'Cancelled'
   },
   {
     timestamps: true,
