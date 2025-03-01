@@ -5,7 +5,7 @@ const APIFeatures = require("./../utils/APIFeatures");
 
 exports.getAllGames = async (req, res, next) => {
   try {
-    const games = await Game.find().populate("category", "name");
+    const games = await Game.find().populate("category", "_id name");
     res.send({ status: "success", length: games.length, data: { games } });
   } catch (err) {
     logger.error(`Error getting games: ${err.message}`);
@@ -15,7 +15,7 @@ exports.getAllGames = async (req, res, next) => {
 exports.getGame = async (req, res, next) => {
   try {
     const gameId = req.params.id;
-    const game = await Game.findById(gameId);
+    const game = await Game.findById(gameId).populate("category", "_id name");
     if (!game) {
       return next(new AppError("No game found with that ID", 404));
     }
