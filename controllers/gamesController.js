@@ -5,7 +5,7 @@ const APIFeatures = require("./../utils/APIFeatures");
 
 exports.getAllGames = async (req, res, next) => {
   try {
-    const games = await Game.find();
+    const games = await Game.find().populate("category", "name");
     res.send({ status: "success", length: games.length, data: { games } });
   } catch (err) {
     logger.error(`Error getting games: ${err.message}`);
